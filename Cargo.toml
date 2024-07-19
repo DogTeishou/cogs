@@ -3,4 +3,12 @@ name = "cogs"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "lib"
+path = "src/lib/lib.rs"
+
 [dependencies]
+serde = "1.0.204"
+tokio = {version = "1.38.1", features = ["full"]}
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
