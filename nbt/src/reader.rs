@@ -13,6 +13,10 @@ impl<'a> NbtReader<'a> {
         }
     }
 
+    pub fn read_nbt<R: NbtReadTrait>(&mut self, r: &mut R) -> Result<Value> {
+        todo!()
+    }
+
     #[inline]
     pub fn read_byte(&mut self) -> Result<i8> {
         if self.cursor >= self.data.len() {
@@ -163,296 +167,20 @@ impl<'a> NbtReader<'a> {
 
 impl NbtReadTrait for Nbt {
     fn read_list(&mut self, r: &mut NbtReader) -> Result<Vec<Value>> {
-        let tag = match r.read_byte() {
-            Ok(v) => v,
-            Err(e) => return Err(e),
-        } as u8;
-        let len = match r.read_int() {
-            Ok(v) => v,
-            Err(e) => return Err(e),
-        } as usize;
-        let mut values = Vec::with_capacity(len as usize);
-        for _ in 0..len {
-            let value = match tag {
-                1 => Value::Byte(match r.read_byte() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                2 => Value::Short(match r.read_short() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                3 => Value::Int(match r.read_int() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                4 => Value::Long(match r.read_long() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                5 => Value::Float(match r.read_float() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                6 => Value::Double(match r.read_double() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                7 => Value::ByteArray(match r.read_byte_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                8 => Value::String(match r.read_string() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                9 => Value::List(match self.read_list(r) {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                10 => Value::Compound(match self.read_compound(r) {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                11 => Value::IntArray(match r.read_int_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                12 => Value::LongArray(match r.read_long_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                _ => return Err(Error::InvalidTag(tag)),
-            };
-            values.push(value);
-        };
-        Ok(values)
+        todo!()
     }
 
     fn read_compound(&mut self, r: &mut NbtReader) -> Result<Vec<(String, Value)>> {
-        let mut values = Vec::new();
-        let mut vals = Vec::new();
-        let byte = match r.read_byte() {
-            Ok(v) => v,
-            Err(e) => return Err(e),
-        } as u8;
-        if byte != 10 {
-            return Err(Error::InvalidTag(byte));
-        }
-        let namefirst = match r.read_string() {
-            Ok(v) => v,
-            Err(e) => return Err(e),
-        };
-        loop {
-            let tag = match r.read_byte() {
-                Ok(v) => v,
-                Err(e) => return Err(e),
-            } as u8;
-            if tag == 0 {
-                break;
-            }
-            let name = match r.read_string() {
-                Ok(v) => v,
-                Err(e) => return Err(e),
-            };
-            let value = match tag {
-                1 => Value::Byte(match r.read_byte() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                2 => Value::Short(match r.read_short() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                3 => Value::Int(match r.read_int() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                4 => Value::Long(match r.read_long() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                5 => Value::Float(match r.read_float() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                6 => Value::Double(match r.read_double() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                7 => Value::ByteArray(match r.read_byte_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                8 => Value::String(match r.read_string() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                9 => Value::List(match self.read_list(r) {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                10 => Value::Compound(match self.read_compound(r) {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                11 => Value::IntArray(match r.read_int_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                12 => Value::LongArray(match r.read_long_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                _ => return Err(Error::InvalidTag(tag)),
-            };
-            vals.push((name, value));
-        };
-        values.push((namefirst, Value::Compound(vals)));
-        Ok(values)
+        todo!()      
     }
 }
 
 impl NbtReadTrait for NbtAfter764 {
     fn read_list(&mut self, r: &mut NbtReader) -> Result<Vec<Value>> {
-        let tag = match r.read_byte() {
-            Ok(v) => v,
-            Err(e) => return Err(e),
-        } as u8;
-        let len = match r.read_int() {
-            Ok(v) => v,
-            Err(e) => return Err(e),
-        } as usize;
-        let mut values = Vec::with_capacity(len as usize);
-        for _ in 0..len {
-            let value = match tag {
-                1 => Value::Byte(match r.read_byte() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                2 => Value::Short(match r.read_short() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                3 => Value::Int(match r.read_int() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                4 => Value::Long(match r.read_long() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                5 => Value::Float(match r.read_float() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                6 => Value::Double(match r.read_double() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                7 => Value::ByteArray(match r.read_byte_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                8 => Value::String(match r.read_string() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                9 => Value::List(match self.read_list(r) {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                10 => Value::Compound(match self.read_compound(r) {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                11 => Value::IntArray(match r.read_int_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                12 => Value::LongArray(match r.read_long_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                _ => return Err(Error::InvalidTag(tag)),
-            };
-            values.push(value);
-        };
-        Ok(values)
+        todo!()
     }
 
     fn read_compound(&mut self, r: &mut NbtReader) -> Result<Vec<(String, Value)>> {
-        let mut values = Vec::new();
-        let mut vals = Vec::new();
-        let byte = match r.read_byte() {
-            Ok(v) => v,
-            Err(e) => return Err(e),
-        } as u8;
-        if byte != 10 {
-            return Err(Error::InvalidTag(byte));
-        }
-        loop {
-            let tag = match r.read_byte() {
-                Ok(v) => v,
-                Err(e) => return Err(e),
-            } as u8;
-            if tag == 0 {
-                break;
-            }
-            let value = match tag {
-                1 => Value::Byte(match r.read_byte() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                2 => Value::Short(match r.read_short() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                3 => Value::Int(match r.read_int() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                4 => Value::Long(match r.read_long() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                5 => Value::Float(match r.read_float() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                6 => Value::Double(match r.read_double() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                7 => Value::ByteArray(match r.read_byte_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                8 => Value::String(match r.read_string() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                9 => Value::List(match self.read_list(r) {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                10 => Value::Compound(match self.read_compound(r) {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                11 => Value::IntArray(match r.read_int_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                12 => Value::LongArray(match r.read_long_array() {
-                    Ok(v) => v,
-                    Err(e) => return Err(e),
-                }),
-                _ => return Err(Error::InvalidTag(tag)),
-            };
-            vals.push(("".to_string(), value));
-        };
-        values.push(("".to_string(), Value::Compound(vals)));
-        Ok(values)
+        todo!()
     }
 }

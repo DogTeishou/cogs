@@ -30,8 +30,8 @@ pub trait NbtReadTrait {
 }
 
 pub trait NbtWriteTrait {
-    fn write_list(&mut self, w: &mut writer::NbtWriter, values: &[Value]) -> Result<()>;
-    fn write_compound(&mut self, w: &mut writer::NbtWriter, values: &[(String, Value)]) -> Result<()>;
+    fn write_list(&mut self, w: &mut writer::NbtWriter, values: &[Value]);
+    fn write_compound(&mut self, w: &mut writer::NbtWriter, values: &[(String, Value)]);
 }
 
 pub enum Error {
@@ -43,70 +43,70 @@ pub enum Error {
 #[derive(Debug)]
 pub enum Value {
     End,
-    Byte(i8),
-    Short(i16),
-    Int(i32),
-    Long(i64),
-    Float(f32),
-    Double(f64),
-    ByteArray(Vec<i8>),
-    String(String),
-    List(Vec<Value>),
-    Compound(Vec<(String, Value)>),
-    IntArray(Vec<i32>),
-    LongArray(Vec<i64>),
+    Byte(String, i8),
+    Short(String, i16),
+    Int(String, i32),
+    Long(String,i64),
+    Float(String, f32),
+    Double(String, f64),
+    ByteArray(String, Vec<i8>),
+    String(String, String),
+    List(String, Vec<Value>),
+    Compound(String, Vec<(String, Value)>),
+    IntArray(String, Vec<i32>),
+    LongArray(String, Vec<i64>),
 }
 
 impl Value {
     pub fn tag(&self) -> u8 {
         match self {
             Value::End => 0,
-            Value::Byte(_) => 1,
-            Value::Short(_) => 2,
-            Value::Int(_) => 3,
-            Value::Long(_) => 4,
-            Value::Float(_) => 5,
-            Value::Double(_) => 6,
-            Value::ByteArray(_) => 7,
-            Value::String(_) => 8,
-            Value::List(_) => 9,
-            Value::Compound(_) => 10,
-            Value::IntArray(_) => 11,
-            Value::LongArray(_) => 12,
+            Value::Byte(_, _) => 1,
+            Value::Short(_, _) => 2,
+            Value::Int(_, _) => 3,
+            Value::Long(_, _) => 4,
+            Value::Float(_, _) => 5,
+            Value::Double(_, _) => 6,
+            Value::ByteArray(_, _) => 7,
+            Value::String(_, _) => 8,
+            Value::List(_, _) => 9,
+            Value::Compound(_, _) => 10,
+            Value::IntArray(_, _) => 11,
+            Value::LongArray(_, _) => 12,
         }
     }
 
     pub fn value(&self) -> String {
         match self {
             Value::End => "End".to_string(),
-            Value::Byte(v) => format!("{}", v),
-            Value::Short(v) => format!("{}", v),
-            Value::Int(v) => format!("{}", v),
-            Value::Long(v) => format!("{}", v),
-            Value::Float(v) => format!("{}", v),
-            Value::Double(v) => format!("{}", v),
-            Value::ByteArray(v) => format!("{:?}", v),
-            Value::String(v) => format!("{}", v),
-            Value::List(v) => {
+            Value::Byte(s, v) => format!("{} {}", s, v),
+            Value::Short(s, v) => format!("{} {}", s, v),
+            Value::Int(s, v) => format!("{} {}", s, v),
+            Value::Long(s, v) => format!("{} {}", s, v),
+            Value::Float(s, v) => format!("{} {}", s, v),
+            Value::Double(s, v) => format!("{} {}", s, v),
+            Value::ByteArray(s, v) => format!("{} {:?}", s, v),
+            Value::String(s, v) => format!("{} {}", s, v),
+            Value::List(s, v) => {
                 let mut i = 0;
-                let mut s = String::new();
+                let mut str = String::new();
                 for value in v {
-                    s = format!("List(index: {}, tag: {}, value{:?}\n)", i, value.tag(), value.value());
+                    str = format!("{} List(index: {}, tag: {}, value{:?}\n)", s,i, value.tag(), value.value());
                     i+=1;
                 };
-                s
+                str
             },
-            Value::Compound(v) => {
+            Value::Compound(s, v) => {
                 let mut i = 0;
-                let mut s = String::new();
+                let mut str = String::new();
                 for (key, value) in v {
-                    s = format!("Compound(index: {}, key: {}, tag: {}, value{:?}\n)", i, key, value.tag(), value.value());
+                    str = format!("{} Compound(index: {}, key: {}, tag: {}, value{:?}\n)", s, i, key, value.tag(), value.value());
                     i+=1;
                 };
-                s
+                str
             },
-            Value::IntArray(v) => format!("{:?}", v),
-            Value::LongArray(v) => format!("{:?}", v),
+            Value::IntArray(s, v) => format!("{} {:?}", s, v),
+            Value::LongArray(s, v) => format!("{} {:?}", s, v),
         }
     }
 }
